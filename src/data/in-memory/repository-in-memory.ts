@@ -15,24 +15,16 @@ export class RepositoryInMemory<TEntity extends Entity> extends Repository<TEnti
     public create(data: TEntity): Promise<TEntity> {
         data.id = this.getNewId();
 
-        this.items.push(data);
+        const lenght = this.items.push(data);
 
-        return Promise.resolve(this.items.slice[this.getLastId()]);
-    }
-
-    private getNewId(): number {
-        return this.items.length > 0 ? this.getLastId() + 1 : 1;
-    }
-
-    private getLastId(): number {
-        return this.items.slice(-1)[0].id;
+        return Promise.resolve(this.items[lenght - 1]);
     }
 
     public update(id: number, data: TEntity): Promise<TEntity> {
         const index = this.getIndexById(id);
 
         if (index === -1) {
-            return Promise.reject(new Error(`Entity with id ${id} not found`));
+            return Promise.reject(new Error(`Entity  with id ${id} not found`));
         }
 
         this.items[index] = data;
@@ -86,5 +78,13 @@ export class RepositoryInMemory<TEntity extends Entity> extends Repository<TEnti
 
     private getIndexById(id: number): number {
         return this.items.findIndex(item => item.id === id);
+    }
+
+    private getNewId(): number {
+        return this.items.length > 0 ? this.getLastId() + 1 : 1;
+    }
+
+    private getLastId(): number {
+        return this.items.slice(-1)[0].id;
     }
 }
