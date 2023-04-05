@@ -1,7 +1,5 @@
 import { ContributorEntity } from "./contributor.entity";
 
-
-
 describe('ContributorEntity', () => {
 
     it('should be fail required password', () => {

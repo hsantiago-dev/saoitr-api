@@ -1,7 +1,5 @@
 import { Entity } from "../../base/entity";
 
-export type ContributorProps = Partial<ContributorEntity>;
-
 export class ContributorEntity extends Entity {
     public name: string;
     public password: string;

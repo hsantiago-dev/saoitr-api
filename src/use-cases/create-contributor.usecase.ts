@@ -23,13 +23,8 @@ export class CreateContributorUseCase implements UseCase<ContributorCreatedDto>{
         let entity = this.contributorCreateMapper.mapFrom(contributor);
 
         const created = await this.repository.create(entity)
-        // .then(this.contributorCreatedMapper.mapTo);
-
-        console.log(created);
 
         return this.contributorCreatedMapper.mapTo(created);
-
-        // return ;
     }
 
 
