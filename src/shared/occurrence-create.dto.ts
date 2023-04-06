@@ -1,5 +1,4 @@
 
-
 export class OccurrenceCreateDto {
     date: string;
     time: string;

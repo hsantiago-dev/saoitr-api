@@ -1,3 +1,4 @@
+
 export class OccurrenceCreatedDto {
     id: number;
     date: string;

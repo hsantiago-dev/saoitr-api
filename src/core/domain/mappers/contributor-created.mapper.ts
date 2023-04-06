@@ -2,7 +2,6 @@ import { Mapper } from "src/core/base/mapper";
 import { ContributorCreatedDto } from "src/shared/contributor-created.dto";
 import { ContributorEntity } from "../entities/contributor.entity";
 
-
 export class ContributorCreatedMapper extends Mapper<ContributorCreatedDto, ContributorEntity> {
 
     public mapFrom(param: ContributorCreatedDto): ContributorEntity {

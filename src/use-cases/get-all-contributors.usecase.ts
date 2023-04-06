@@ -4,7 +4,6 @@ import { ContributorCreatedMapper } from "src/core/domain/mappers/contributor-cr
 import { ContributorRepository } from "src/core/repositories/contributor.repository";
 import { ContributorCreatedDto } from "src/shared/contributor-created.dto";
 
-
 @Injectable()
 export class GetAllContributorsUseCase implements UseCase<ContributorCreatedDto[]> {
 

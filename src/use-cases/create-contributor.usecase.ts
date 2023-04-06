@@ -6,7 +6,6 @@ import { ContributorRepository } from "src/core/repositories/contributor.reposit
 import { ContributorCreateDto } from "src/shared/contributor-create.dto";
 import { ContributorCreatedDto } from "src/shared/contributor-created.dto";
 
-
 @Injectable()
 export class CreateContributorUseCase implements UseCase<ContributorCreatedDto>{
 
@@ -18,7 +17,6 @@ export class CreateContributorUseCase implements UseCase<ContributorCreatedDto>{
         this.contributorCreatedMapper = new ContributorCreatedMapper();
     }
 
-
     public async execute(contributor: ContributorCreateDto): Promise<ContributorCreatedDto> {
         let entity = this.contributorCreateMapper.mapFrom(contributor);
 
@@ -26,7 +24,4 @@ export class CreateContributorUseCase implements UseCase<ContributorCreatedDto>{
 
         return this.contributorCreatedMapper.mapTo(created);
     }
-
-
-
 }

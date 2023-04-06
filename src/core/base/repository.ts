@@ -1,6 +1,4 @@
-// cpntributor/core/base/repository.ts
 import { Entity } from "./entity";
-
 
 export abstract class Repository<TEntity extends Entity>{
     abstract create(data: TEntity): Promise<TEntity>;
