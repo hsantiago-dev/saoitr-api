@@ -1,23 +1,57 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post, Param, HttpException, HttpStatus, Put } from "@nestjs/common";
 import { ContributorCreateDto } from "src/shared/contributor-create.dto";
 import { ContributorCreatedDto } from "src/shared/contributor-created.dto";
-import { CreateContributorUseCase } from "src/use-cases/create-contributor.usecase";
-import { GetAllContributorsUseCase } from "src/use-cases/get-all-contributors.usecase";
+import { CreateContributorUseCase } from "src/use-cases/contributor/create-contributor.usecase";
+import { GetOneContributorUseCase } from "src/use-cases/contributor/get-one-contributor.usecase";
+import { UpdateContributorUseCase } from "src/use-cases/contributor/update-contributor.usecase";
 
-@Controller('/contributors')
+@Controller('/users')
 export class ContributorController {
     constructor(
         private readonly createContributorUseCase: CreateContributorUseCase,
-        private readonly getAllContributorsUseCase: GetAllContributorsUseCase,
+        private readonly getOneContributorUseCase: GetOneContributorUseCase,
+        private readonly updateContributorUseCase: UpdateContributorUseCase
     ) {}
 
     @Post()
     async create(@Body() body: ContributorCreateDto): Promise<ContributorCreatedDto> {
-        return await this.createContributorUseCase.execute(body);
+
+        try {
+
+            return await this.createContributorUseCase.execute(body);
+        } catch (error) {
+            if (error.message.includes('is required') || error.message.includes('is invalid'))
+                throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+
+            throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @Get()
-    async getAll(): Promise<ContributorCreatedDto[]> {
-        return await this.getAllContributorsUseCase.execute();
+    @Get('/:userId')
+    async getOneUser(@Param('userId') id: string): Promise<ContributorCreatedDto> {
+
+        try {
+
+            return await this.getOneContributorUseCase.execute(id);
+        } catch (error) {
+            if (error.message.includes('not found'))
+                throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+
+            throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Put('/:userId')
+    async update(@Param('userId') id: string, @Body() body: ContributorCreateDto): Promise<ContributorCreatedDto> {
+
+        try {
+
+            return await this.updateContributorUseCase.execute(id, body);
+        } catch (error) {
+            if (error.message.includes('is required') || error.message.includes('is invalid'))
+                throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+
+            throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

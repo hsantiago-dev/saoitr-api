@@ -22,13 +22,14 @@ export class RepositoryInMemory<TEntity extends Entity> extends Repository<TEnti
 
     public update(id: number, data: TEntity): Promise<TEntity> {
         const index = this.getIndexById(id);
-
+        
         if (index === -1) {
             return Promise.reject(new Error(`Entity  with id ${id} not found`));
         }
-
+        
+        data.id = id;
         this.items[index] = data;
-
+        
         return Promise.resolve(this.items[index]);
     }
 

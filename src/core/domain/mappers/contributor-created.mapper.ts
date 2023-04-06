@@ -9,6 +9,7 @@ export class ContributorCreatedMapper extends Mapper<ContributorCreatedDto, Cont
         const contributor = new ContributorEntity({
             id: param.id
             , name: param.name
+            , email: param.email
         });
 
         return contributor;
@@ -19,6 +20,7 @@ export class ContributorCreatedMapper extends Mapper<ContributorCreatedDto, Cont
         const contributor = new ContributorCreatedDto({
             id: param.id
             , name: param.name
+            , email: param.email
         });
 
         return contributor;

@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ContributorRepository } from 'src/core/repositories/contributor.repository';
 import { ContributorInMemoryRepository } from 'src/data/in-memory/contributor-in-memory.repository';
-import { CreateContributorUseCase } from 'src/use-cases/create-contributor.usecase';
-import { GetAllContributorsUseCase } from 'src/use-cases/get-all-contributors.usecase';
+import { CreateContributorUseCase } from 'src/use-cases/contributor/create-contributor.usecase';
+import { GetOneContributorUseCase } from 'src/use-cases/contributor/get-one-contributor.usecase';
 import { ContributorController } from '../contributor.controller';
+import { UpdateContributorUseCase } from 'src/use-cases/contributor/update-contributor.usecase';
 
 @Module({
     imports: [],
@@ -14,7 +15,8 @@ import { ContributorController } from '../contributor.controller';
             useClass: ContributorInMemoryRepository,
         },
         CreateContributorUseCase,
-        GetAllContributorsUseCase
+        GetOneContributorUseCase,
+        UpdateContributorUseCase,
     ],
 })
 export class ContributorModule {}
