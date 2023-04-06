@@ -4,6 +4,7 @@ import { OccurrenceRepository } from 'src/core/repositories/occurrence.repositor
 import { OccurrenceInMemoryRepository } from 'src/data/in-memory/occurrence-in-memory.repository';
 import { CreateOcurrenceUseCase } from 'src/use-cases/occurrence/create-occurrence.usecase';
 import { GetAllOccurrencesUseCase } from 'src/use-cases/occurrence/get-all-occurrences.usecase';
+import { UpdateOcurrenceUseCase } from 'src/use-cases/occurrence/update-occurrence.usecase';
 
 @Module({
     imports: [],
@@ -14,7 +15,8 @@ import { GetAllOccurrencesUseCase } from 'src/use-cases/occurrence/get-all-occur
             useClass: OccurrenceInMemoryRepository,
         },
         CreateOcurrenceUseCase,
-        GetAllOccurrencesUseCase
+        GetAllOccurrencesUseCase,
+        UpdateOcurrenceUseCase
     ],
 })
 export class OccurrenceModule {}
