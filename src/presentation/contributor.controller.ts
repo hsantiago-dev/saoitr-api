@@ -54,4 +54,6 @@ export class ContributorController {
             throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    //TODO implement delete
 }

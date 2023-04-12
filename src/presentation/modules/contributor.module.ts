@@ -5,10 +5,12 @@ import { CreateContributorUseCase } from 'src/use-cases/contributor/create-contr
 import { GetOneContributorUseCase } from 'src/use-cases/contributor/get-one-contributor.usecase';
 import { ContributorController } from '../contributor.controller';
 import { UpdateContributorUseCase } from 'src/use-cases/contributor/update-contributor.usecase';
+import { SignInUseCase } from 'src/use-cases/contributor/sign-in.usecase';
+import { AuthenticationController } from '../authentication.controller';
 
 @Module({
     imports: [],
-    controllers: [ContributorController],
+    controllers: [ContributorController, AuthenticationController],
     providers: [
         {
             provide: ContributorRepository,
@@ -17,6 +19,8 @@ import { UpdateContributorUseCase } from 'src/use-cases/contributor/update-contr
         CreateContributorUseCase,
         GetOneContributorUseCase,
         UpdateContributorUseCase,
+        // authentication
+        SignInUseCase
     ],
 })
 export class ContributorModule {}

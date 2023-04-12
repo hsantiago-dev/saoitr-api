@@ -55,6 +55,11 @@ export class RepositoryInMemory<TEntity extends Entity> extends Repository<TEnti
         return Promise.resolve(this.items);
     }
 
+    public async getOne(filter: Partial<TEntity>): Promise<TEntity> {
+        return await this.getMany(filter)
+            .then(items => items.length > 0 ? items[0] : null);
+    }
+
     public getMany(filter: Partial<TEntity>): Promise<TEntity[]> {
         let filtered = this.items;
 
