@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
 import { UseCase } from "src/core/base/use-case";
-import { LoginMapper } from "src/core/domain/mappers/login.mapper";
 import { UserLoggedMapper } from "src/core/domain/mappers/user-logged.mapper";
 import { ContributorRepository } from "src/core/repositories/contributor.repository";
 import { LoginDto } from "src/shared/login.dto";
@@ -11,16 +11,26 @@ export class SignInUseCase implements UseCase<UserLoggedDto> {
 
     private userLoggedMapper: UserLoggedMapper;
 
-    constructor(private readonly repository: ContributorRepository) {
+    constructor(
+        private readonly repository: ContributorRepository
+        ,   private readonly jwtService: JwtService
+    ) {
         this.userLoggedMapper = new UserLoggedMapper();
     }
 
     public async execute(login: LoginDto): Promise<UserLoggedDto> {
-        const user = await this.repository.getOne(login);
+        const user = await this.repository.getOne({ email: login.email });
 
-        if (!user)
-            throw new Error('User not found');
+        if (!user || user.password !== login.password) {
+            throw new UnauthorizedException('Invalid credentials');
+        }
 
-        return this.userLoggedMapper.mapTo(user);
+        const payload = { id: user.id };
+
+        const userLogged = this.userLoggedMapper.mapTo(user);
+
+        userLogged.token = await this.jwtService.signAsync(payload);
+
+        return userLogged;
     }
 }
