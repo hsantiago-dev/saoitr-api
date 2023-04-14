@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Post, Param, HttpException, HttpStatus, Put } from "@nestjs/common";
+import { Body, Controller, Get, Post, Param, HttpException, HttpStatus, Put, UseGuards } from "@nestjs/common";
+import { AuthGuard } from "src/infra/auth/auth.guard";
 import { ContributorCreateDto } from "src/shared/contributor-create.dto";
 import { ContributorCreatedDto } from "src/shared/contributor-created.dto";
 import { CreateContributorUseCase } from "src/use-cases/contributor/create-contributor.usecase";
@@ -27,6 +28,7 @@ export class ContributorController {
         }
     }
 
+    @UseGuards(AuthGuard)
     @Get('/:userId')
     async getOneUser(@Param('userId') id: string): Promise<ContributorCreatedDto> {
 
@@ -41,6 +43,7 @@ export class ContributorController {
         }
     }
 
+    @UseGuards(AuthGuard)
     @Put('/:userId')
     async update(@Param('userId') id: string, @Body() body: ContributorCreateDto): Promise<ContributorCreatedDto> {
 
