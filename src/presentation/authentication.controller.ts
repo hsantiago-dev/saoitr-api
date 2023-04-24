@@ -17,8 +17,8 @@ export class AuthenticationController {
 
             return await this.signInUseCase.execute(body);
         } catch (error) {
-            if (error.message.includes('is required') || error.message.includes('is invalid'))
-                throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+            if (error.message.includes('Invalid'))
+                throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
 
             throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
