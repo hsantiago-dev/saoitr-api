@@ -1,6 +1,6 @@
-import { OccurrenceEntity } from "src/core/domain/entities/occurrence.entity";
+import { OccurrenceEntity } from "../../core/domain/entities/occurrence.entity";
 import { RepositoryInMemory } from "./repository-in-memory";
-import { OccurrenceRepository } from "src/core/repositories/occurrence.repository";
+import { OccurrenceRepository } from "../../core/repositories/occurrence.repository";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
