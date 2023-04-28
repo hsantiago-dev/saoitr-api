@@ -9,6 +9,8 @@ import { UpdateContributorUseCase } from 'src/use-cases/contributor/update-contr
 import { SignInUseCase } from 'src/use-cases/contributor/sign-in.usecase';
 import { AuthenticationController } from '../authentication.controller';
 import { jwtConstants } from 'src/infra/auth/constants';
+import { ContributorPrismaRepository } from 'src/data/remote/contributor-prisma.respository';
+import { PrismaService } from 'src/infra/service/prisma.service';
 
 @Module({
     imports: [
@@ -20,9 +22,10 @@ import { jwtConstants } from 'src/infra/auth/constants';
     ],
     controllers: [ContributorController, AuthenticationController],
     providers: [
+        PrismaService,
         {
             provide: ContributorRepository,
-            useClass: ContributorInMemoryRepository,
+            useClass: ContributorPrismaRepository,
         },
         CreateContributorUseCase,
         GetOneContributorUseCase,
