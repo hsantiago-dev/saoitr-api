@@ -11,6 +11,8 @@ import { AuthenticationController } from '../authentication.controller';
 import { jwtConstants } from 'src/infra/auth/constants';
 import { ContributorPrismaRepository } from 'src/data/remote/contributor-prisma.respository';
 import { PrismaService } from 'src/infra/service/prisma.service';
+import { SignOutUseCase } from 'src/use-cases/contributor/sign-out.usecase';
+import { BlackListService } from 'src/infra/service/black-list.service';
 
 @Module({
     imports: [
@@ -23,6 +25,7 @@ import { PrismaService } from 'src/infra/service/prisma.service';
     controllers: [ContributorController, AuthenticationController],
     providers: [
         PrismaService,
+        BlackListService,
         {
             provide: ContributorRepository,
             useClass: ContributorPrismaRepository,
@@ -31,7 +34,8 @@ import { PrismaService } from 'src/infra/service/prisma.service';
         GetOneContributorUseCase,
         UpdateContributorUseCase,
         // authentication
-        SignInUseCase
+        SignInUseCase,
+        SignOutUseCase
     ],
 })
 export class ContributorModule {}
