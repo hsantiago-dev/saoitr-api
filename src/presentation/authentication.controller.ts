@@ -1,5 +1,4 @@
 import { Body, Controller, Post, HttpException, HttpStatus, HttpCode, Headers, UseGuards } from "@nestjs/common";
-import { AuthUser } from "src/infra/auth-user.decorator";
 import { AuthGuard } from "src/infra/auth/auth.guard";
 import { LoginDto } from "src/shared/login.dto";
 import { UserLoggedDto } from "src/shared/user-logged.dto";
