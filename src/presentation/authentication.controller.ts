@@ -1,5 +1,6 @@
 import { Body, Controller, Post, HttpException, HttpStatus, HttpCode, Headers, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "src/infra/auth/auth.guard";
+import { BlackListGuard } from "src/infra/auth/black-list.guard";
 import { LoginDto } from "src/shared/login.dto";
 import { UserLoggedDto } from "src/shared/user-logged.dto";
 import { SignInUseCase } from "src/use-cases/contributor/sign-in.usecase";
@@ -28,12 +29,12 @@ export class AuthenticationController {
     }
 
     @HttpCode(HttpStatus.OK)
-    @UseGuards(AuthGuard)
+    @UseGuards(AuthGuard, BlackListGuard)
     @Post('/logout')
-    async signOut(@Headers() param?: string): Promise<void> {
+    async signOut(@Headers() headers?: string): Promise<void> {
 
         try {
-            const authorization = param['authorization'];
+            const authorization = headers['authorization'];
 
             return await this.signOutUseCase.execute(authorization);
         } catch (error) {
