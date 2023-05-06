@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ContributorEntity } from "../../core/domain/entities/contributor.entity";
 import { ContributorRepository } from "../../core/repositories/contributor.repository";
 import { PrismaService } from "../../infra/service/prisma.service";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class ContributorPrismaRepository implements ContributorRepository {
@@ -12,20 +13,31 @@ export class ContributorPrismaRepository implements ContributorRepository {
 
         const { name, email, password } = entity;
 
-        const contributor = await this.prismaService.contributor.create({
-            data: {
-                name,
-                email,
-                password
-            }
-        });
+        try {
 
-        return new ContributorEntity({
-            id: contributor.id
-            , name: contributor.name
-            , email: contributor.email
-            , password: contributor.password 
-        });
+            const contributor = await this.prismaService.contributor.create({
+                data: {
+                    name,
+                    email,
+                    password
+                }
+            });
+    
+            return new ContributorEntity({
+                id: contributor.id
+                , name: contributor.name
+                , email: contributor.email
+                , password: contributor.password 
+            });
+        } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                if (error.code === 'P2002') {
+                    throw new Error("Email already exists");
+                }
+            }
+            
+            throw new Error(error);
+        }
     }
 
     async update(id: number, entity: ContributorEntity): Promise<ContributorEntity> {

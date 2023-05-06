@@ -22,7 +22,11 @@ export class ContributorController {
 
             return await this.createContributorUseCase.execute(body);
         } catch (error) {
-            if (error.message.includes('is required') || error.message.includes('is invalid'))
+            if (
+                error.message.includes('is required') 
+                || error.message.includes('is invalid')
+                || error.message.includes('already exists')
+            )
                 throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
 
             throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
