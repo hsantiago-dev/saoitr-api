@@ -6,7 +6,6 @@ export class BlackListService {
     private blackList: string[] = [];
 
     async addToken(token: string) {
-        console.log('addToken', token);
         this.blackList.push(token);
     }
 
