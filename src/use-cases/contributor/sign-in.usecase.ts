@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { UseCase } from "src/core/base/use-case";
+import { ContributorEntity } from "src/core/domain/entities/contributor.entity";
 import { UserLoggedMapper } from "src/core/domain/mappers/user-logged.mapper";
 import { ContributorRepository } from "src/core/repositories/contributor.repository";
 import { LoginDto } from "src/shared/login.dto";
@@ -19,7 +20,14 @@ export class SignInUseCase implements UseCase<UserLoggedDto> {
     }
 
     public async execute(login: LoginDto): Promise<UserLoggedDto> {
-        const user = await this.repository.getOne({ email: login.email });
+        let user: ContributorEntity;
+
+        try {
+            
+            user = await this.repository.getOne({ email: login.email });
+        } catch (error) {
+            throw new UnauthorizedException('Invalid credentials');
+        }
 
         if (!user || user.password !== login.password) {
             throw new UnauthorizedException('Invalid credentials');
