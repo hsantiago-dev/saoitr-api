@@ -25,9 +25,10 @@ export class ContributorController {
             if (
                 error.message.includes('is required') 
                 || error.message.includes('is invalid')
-                || error.message.includes('already exists')
             )
                 throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+            else if (error.message.includes('already exists'))
+                throw new HttpException(error.message, HttpStatus.UNPROCESSABLE_ENTITY);
 
             throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
