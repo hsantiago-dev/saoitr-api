@@ -18,9 +18,17 @@ export class UpdateContributorUseCase implements UseCase<ContributorCreatedDto>{
     }
 
     public async execute(id: string, contributor: ContributorCreateDto): Promise<ContributorCreatedDto> {
-        let entity = this.contributorCreateMapper.mapFrom(contributor);
+        // let entity = this.contributorCreateMapper.mapFrom(contributor);
+        const entity = {}
 
-        const updated = await this.repository.update(parseInt(id), entity);
+        if (contributor.name)
+            entity['name'] = contributor.name;
+        if (contributor.email)
+            entity['email'] = contributor.email;
+        if (contributor.password)
+            entity['password'] = contributor.password;
+
+        const updated = await this.repository.patch(parseInt(id), entity);
 
         return this.contributorCreatedMapper.mapTo(updated);
     }

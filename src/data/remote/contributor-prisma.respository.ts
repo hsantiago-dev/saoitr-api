@@ -63,7 +63,19 @@ export class ContributorPrismaRepository implements ContributorRepository {
 
     async patch(id: number, entity: Partial<ContributorEntity>): Promise<ContributorEntity> {
 
-        throw new Error("Method not implemented.");
+        const contributor = await this.prismaService.contributor.update({
+            where: { id },
+            data: {
+                ...entity
+            }
+        });
+
+        return new ContributorEntity({
+            id: contributor.id
+            , name: contributor.name
+            , email: contributor.email
+            , password: contributor.password 
+        });
     }
 
     async getById(id: number): Promise<ContributorEntity> {

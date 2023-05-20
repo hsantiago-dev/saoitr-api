@@ -32,10 +32,8 @@ export class AuthenticationController {
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard, BlackListGuard)
     @Post('/logout')
-    async signOut(@Body() body: any, @UserId() userIdToken: number, @Headers() headers?: string): Promise<void> {
+    async signOut(@Body() body: LogoutBody, @UserId() userIdToken: number, @Headers() headers?: string): Promise<void> {
 
-        console.log('userIdToken ', userIdToken);
-        console.log('body ', body);
         if (userIdToken !== body.id)
             throw new HttpException('Invalid user id', HttpStatus.BAD_REQUEST);
 
