@@ -20,7 +20,7 @@ model Occurrence {
   date String
   time String
   local String
-  type String
+  type Int
   km String
   contributor   Contributor @relation(fields: [contributorId], references: [id])
   contributorId Int
