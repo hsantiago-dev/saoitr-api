@@ -4,7 +4,7 @@ export class OccurrenceEntity extends Entity {
     public date: string;
     public time: string;
     public local: string;
-    public occurrenceType: string;
+    public occurrenceType: number;
     public km: number;
     public contributorId: number;
 
