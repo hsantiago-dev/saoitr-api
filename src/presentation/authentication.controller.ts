@@ -18,13 +18,27 @@ export class AuthenticationController {
     @Post('/login')
     async signIn(@Body() body: LoginDto): Promise<UserLoggedDto> {
 
+        console.log('\n\n----------------------------------------------------------');
+        
         try {
 
-            return await this.signInUseCase.execute(body);
-        } catch (error) {
-            if (error.message.includes('Invalid'))
-                throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
+            console.log('Login...');
+            console.log('Recebido:');
+            console.log(body);
 
+            const userLogged = await this.signInUseCase.execute(body);
+
+            console.log('Retorno 200:');
+            console.log(userLogged);
+
+            return userLogged;
+        } catch (error) {
+            if (error.message.includes('Invalid')) {
+                console.log(HttpStatus.UNAUTHORIZED + ' - ' + error.message); 
+                throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
+            }
+
+            console.log(HttpStatus.INTERNAL_SERVER_ERROR + ' - ' + error.message); 
             throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -34,8 +48,16 @@ export class AuthenticationController {
     @Post('/logout')
     async signOut(@Body() body: LogoutBody, @UserId() userIdToken: number, @Headers() headers?: string): Promise<void> {
 
-        if (userIdToken !== body.id)
+        console.log('\n\n----------------------------------------------------------');
+
+        if (userIdToken !== body.id) {
+            console.log(HttpStatus.BAD_REQUEST + ' - Invalid user id'); 
             throw new HttpException('Invalid user id', HttpStatus.BAD_REQUEST);
+        }
+
+        console.log('Logout...');
+        console.log('Recebido:');
+        console.log(body);
 
         try {
 
@@ -43,6 +65,8 @@ export class AuthenticationController {
 
             return await this.signOutUseCase.execute(authorization);
         } catch (error) {
+
+            console.log(HttpStatus.INTERNAL_SERVER_ERROR + ' - ' + error.message); 
             throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

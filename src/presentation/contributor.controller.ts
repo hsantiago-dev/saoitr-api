@@ -18,18 +18,33 @@ export class ContributorController {
     @Post()
     async create(@Body() body: ContributorCreateDto): Promise<ContributorCreatedDto> {
 
+        console.log('\n\n----------------------------------------------------------');
         try {
 
-            return await this.createContributorUseCase.execute(body);
+            console.log('Criando usuário...');
+            console.log('Recebido:');
+            console.log(body);
+
+            const contributor = await this.createContributorUseCase.execute(body);
+
+            console.log('Retorno 200:');
+            console.log(contributor);
+            return contributor;
         } catch (error) {
             if (
                 error.message.includes('is required') 
                 || error.message.includes('is invalid')
-            )
-                throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-            else if (error.message.includes('already exists'))
-                throw new HttpException(error.message, HttpStatus.UNPROCESSABLE_ENTITY);
+            ) {
 
+                console.log(HttpStatus.BAD_REQUEST + ' - ' + error.message); 
+                throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+            }
+            else if (error.message.includes('already exists')) {
+                console.log(HttpStatus.UNPROCESSABLE_ENTITY + ' - ' + error.message); 
+                throw new HttpException(error.message, HttpStatus.UNPROCESSABLE_ENTITY);
+            }
+
+            console.log(HttpStatus.INTERNAL_SERVER_ERROR + ' - ' + error.message); 
             throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
