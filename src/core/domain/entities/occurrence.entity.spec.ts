@@ -7,23 +7,23 @@ describe('OccurrenceEntity', () => {
             date: "2020-01-01",
             time: "10:00",
             local: "Local",
-            occurrenceType: "acidente",
+            occurrenceType: 1,
             km: 100,
             contributorId: 1
         }
-
+        
         const occurrence = new OccurrenceEntity(setup);
         
         expect(occurrence).toBeDefined();
         expect(occurrence.date).toBe("2020-01-01");
-        expect(occurrence.occurrenceType).toBe("acidente");
+        expect(occurrence.occurrenceType).toBe(1);
     });
 
     it('should throw error when date is not provided', () => {
         const setup = {
             time: "10:00",
             local: "Local",
-            occurrenceType: "acidente",
+            occurrenceType: 1,
             km: 100,
             contributorId: 1
         }
