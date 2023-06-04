@@ -17,11 +17,10 @@ model Contributor {
 
 model Occurrence {
   id Int @id @default(autoincrement())
-  date String
-  time String
+  registered_at String
   local String
   type Int
-  km String
+  km Int
   contributor   Contributor @relation(fields: [contributorId], references: [id])
   contributorId Int
 }

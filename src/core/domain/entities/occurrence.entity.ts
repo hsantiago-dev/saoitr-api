@@ -1,8 +1,7 @@
 import { Entity } from "../../base/entity";
 
 export class OccurrenceEntity extends Entity {
-    public date: string;
-    public time: string;
+    public registered_at: string;
     public local: string;
     public occurrenceType: number;
     public km: number;
@@ -21,10 +20,8 @@ export class OccurrenceEntity extends Entity {
     }
 
     private validateRequiredData(data: Partial<OccurrenceEntity>): void {
-        if (!data.date) {
-            throw new Error("Date is required");
-        } else if (!data.time) {
-            throw new Error("Time is required");
+        if (!data.registered_at) {
+            throw new Error("Registered at is required");
         } else if (!data.local) {
             throw new Error("Local is required");
         } else if (!data.occurrenceType) {

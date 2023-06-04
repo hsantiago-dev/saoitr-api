@@ -9,11 +9,10 @@ CREATE TABLE "Contributor" (
 -- CreateTable
 CREATE TABLE "Occurrence" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "date" TEXT NOT NULL,
-    "time" TEXT NOT NULL,
+    "registered_at" TEXT NOT NULL,
     "local" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
-    "km" TEXT NOT NULL,
+    "type" INTEGER NOT NULL,
+    "km" INTEGER NOT NULL,
     "contributorId" INTEGER NOT NULL,
     CONSTRAINT "Occurrence_contributorId_fkey" FOREIGN KEY ("contributorId") REFERENCES "Contributor" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );

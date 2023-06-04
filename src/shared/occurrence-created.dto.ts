@@ -1,8 +1,7 @@
 
 export class OccurrenceCreatedDto {
     id: number;
-    date: string;
-    time: string;
+    registered_at: string;
     local: string;
     occurrence_type: number;
     km: number;

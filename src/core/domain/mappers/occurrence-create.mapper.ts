@@ -7,8 +7,7 @@ export class OccurrenceCreateMapper extends Mapper<OccurrenceCreateDto, Occurren
     public mapFrom(param: OccurrenceCreateDto): OccurrenceEntity {
         
         const occurrence = new OccurrenceEntity({
-            date: param.date,
-            time: param.time,
+            registered_at: param.registered_at,
             local: param.local,
             km: param.km,
             occurrenceType: param.occurrence_type,
@@ -21,8 +20,7 @@ export class OccurrenceCreateMapper extends Mapper<OccurrenceCreateDto, Occurren
     public mapTo(param: OccurrenceEntity): OccurrenceCreateDto {
             
         const occurrence = new OccurrenceCreateDto({
-            date: param.date,
-            time: param.time,
+            registered_at: param.registered_at,
             local: param.local,
             km: param.km,
             occurrence_type: param.occurrenceType,
