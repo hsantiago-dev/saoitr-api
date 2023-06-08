@@ -33,7 +33,7 @@ export class OccurrenceController {
             return occurrence;
         } catch (error) {
             
-            if (error.message.includes('is required') || error.message.includes('is invalid')){
+            if (error.message.includes('is required') || error.message.includes('is invalid') || error.message.includes('Invalid')){
                 console.log(HttpStatus.BAD_REQUEST + ' - ' + error.message); 
                 throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
             }

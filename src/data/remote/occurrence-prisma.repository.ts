@@ -34,6 +34,10 @@ export class OccurrencePrismaRepository implements OccurrenceRepository {
                 , contributorId: occurrence.contributorId
             });
         } catch (error) {
+            if (error instanceof Prisma.PrismaClientValidationError) {
+                throw new Error("Invalid data");
+            }
+            
             throw new Error(error);
         }
     }
