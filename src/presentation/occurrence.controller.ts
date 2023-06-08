@@ -17,22 +17,50 @@ export class OccurrenceController {
     @UseGuards(AuthGuard)
     @Post()
     async create(@Body() body: Required<OccurrenceCreateDto>): Promise<OccurrenceCreatedDto> {
+        
+        console.log('\n\n----------------------------------------------------------');
+        console.log('Criar ocorrência...');
+        console.log('Recebido:');
+        console.log(body);
 
         try {
 
-            return await this.createOccurrenceUseCase.execute(body);
+            const occurrence = await this.createOccurrenceUseCase.execute(body);
+            
+            console.log('Retorno 200:');
+            console.log(occurrence);
+
+            return occurrence;
         } catch (error) {
             
-            if (error.message.includes('is required') || error.message.includes('is invalid'))
+            if (error.message.includes('is required') || error.message.includes('is invalid')){
+                console.log(HttpStatus.BAD_REQUEST + ' - ' + error.message); 
                 throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+            }
 
+            console.log(HttpStatus.INTERNAL_SERVER_ERROR + ' - ' + error.message); 
             throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
     @Get()
     async getAll(): Promise<OccurrenceCreatedDto[]> {
-        return await this.getAllOccurrencesUseCase.execute();
+        
+        console.log('\n\n----------------------------------------------------------');
+        console.log('Todas as ocorrências...');
+        
+        try {
+
+            const occurrences = await this.getAllOccurrencesUseCase.execute();
+    
+            console.log('Retorno 200:');
+            console.log(occurrences);
+    
+            return occurrences;
+        } catch (error) {
+            console.log(HttpStatus.INTERNAL_SERVER_ERROR + ' - ' + error.message); 
+            throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @UseGuards(AuthGuard)

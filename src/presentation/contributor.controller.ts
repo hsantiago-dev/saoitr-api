@@ -68,13 +68,28 @@ export class ContributorController {
     @Put('/:userId')
     async update(@Param('userId') id: string, @Body() body: ContributorCreateDto): Promise<ContributorCreatedDto> {
 
+        console.log('\n\n----------------------------------------------------------');
+        console.log('Atualizar usuário...');
+        console.log('Recebido:');
+        console.log('ID ' + id);
+        console.log(body);
+
         try {
 
-            return await this.updateContributorUseCase.execute(id, body);
-        } catch (error) {
-            if (error.message.includes('is required') || error.message.includes('is invalid'))
-                throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+            const contributor =  await this.updateContributorUseCase.execute(id, body);
 
+            console.log('Retorno 200:');
+            console.log(contributor);
+
+            return contributor;
+        } catch (error) {
+            if (error.message.includes('is required') || error.message.includes('is invalid')) {
+
+                console.log(HttpStatus.BAD_REQUEST + ' - ' + error.message);
+                throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+            }
+
+            console.log(HttpStatus.INTERNAL_SERVER_ERROR + ' - ' + error.message);
             throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
