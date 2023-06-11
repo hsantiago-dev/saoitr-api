@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Post, Param, HttpException, HttpStatus, Put, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, Param, HttpException, HttpStatus, Put, UseGuards, Delete } from "@nestjs/common";
 import { AuthGuard } from "src/infra/auth/auth.guard";
 import { BlackListGuard } from "src/infra/auth/black-list.guard";
+import { UserId } from "src/infra/decorators/user-id.decorator";
 import { ContributorCreateDto } from "src/shared/contributor-create.dto";
 import { ContributorCreatedDto } from "src/shared/contributor-created.dto";
 import { CreateContributorUseCase } from "src/use-cases/contributor/create-contributor.usecase";
+import { DeleteContributorUseCase } from "src/use-cases/contributor/delete-contributor.usecase";
 import { GetOneContributorUseCase } from "src/use-cases/contributor/get-one-contributor.usecase";
 import { UpdateContributorUseCase } from "src/use-cases/contributor/update-contributor.usecase";
 
@@ -12,7 +14,8 @@ export class ContributorController {
     constructor(
         private readonly createContributorUseCase: CreateContributorUseCase,
         private readonly getOneContributorUseCase: GetOneContributorUseCase,
-        private readonly updateContributorUseCase: UpdateContributorUseCase
+        private readonly updateContributorUseCase: UpdateContributorUseCase,
+        private readonly deleteContributorUseCase: DeleteContributorUseCase
     ) {}
 
     @Post()
@@ -94,5 +97,22 @@ export class ContributorController {
         }
     }
 
-    //TODO implement delete
+    @UseGuards(AuthGuard)
+    @Delete('/:userId')
+    async delete(@Param('userId') id: string, @UserId() userIdToken: number): Promise<void> {
+
+        try {
+
+            const idNumber = parseInt(id);
+
+            if (isNaN(idNumber)) throw new Error('Invalid occurrence id');
+
+            await this.deleteContributorUseCase.execute(idNumber);
+        } catch (error) {
+            if (error.message.includes('Invalid'))
+                throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+
+            throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

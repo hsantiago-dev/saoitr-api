@@ -13,6 +13,7 @@ import { ContributorPrismaRepository } from 'src/data/remote/contributor-prisma.
 import { PrismaService } from 'src/infra/service/prisma.service';
 import { SignOutUseCase } from 'src/use-cases/contributor/sign-out.usecase';
 import { BlackListService } from 'src/infra/service/black-list.service';
+import { DeleteContributorUseCase } from 'src/use-cases/contributor/delete-contributor.usecase';
 
 @Module({
     imports: [
@@ -33,6 +34,7 @@ import { BlackListService } from 'src/infra/service/black-list.service';
         CreateContributorUseCase,
         GetOneContributorUseCase,
         UpdateContributorUseCase,
+        DeleteContributorUseCase,
         // authentication
         SignInUseCase,
         SignOutUseCase
