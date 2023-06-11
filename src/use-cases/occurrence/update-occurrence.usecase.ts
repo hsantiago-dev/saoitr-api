@@ -17,10 +17,10 @@ export class UpdateOcurrenceUseCase implements UseCase<OccurrenceCreatedDto> {
         this.occurrenceCreatedMapper = new OccurrenceCreatedMapper();
     }
     
-    public async execute(id: string, occurrence: OccurrenceCreateDto): Promise<OccurrenceCreatedDto> {
+    public async execute(id: number, occurrence: OccurrenceCreateDto): Promise<OccurrenceCreatedDto> {
         let entity = this.occurrenceCreateMapper.mapFrom(occurrence);
 
-        const updated = await this.repository.update(parseInt(id), entity)
+        const updated = await this.repository.update(id, entity)
 
         return this.occurrenceCreatedMapper.mapTo(updated);
     }

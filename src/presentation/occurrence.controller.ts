@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post, HttpException, HttpStatus, Put, Param, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "src/infra/auth/auth.guard";
+import { UserId } from "src/infra/decorators/user-id.decorator";
 import { OccurrenceCreateDto } from "src/shared/occurrence-create.dto";
 import { OccurrenceCreatedDto } from "src/shared/occurrence-created.dto";
 import { CreateOcurrenceUseCase } from "src/use-cases/occurrence/create-occurrence.usecase";
@@ -67,15 +68,27 @@ export class OccurrenceController {
 
     @UseGuards(AuthGuard)
     @Put('/:occurrenceId')
-    async update(@Param('occurrenceId') id: string, @Body() body: OccurrenceCreateDto): Promise<OccurrenceCreatedDto> {
+    async update(@Param('occurrenceId') id: string, @UserId() userIdToken: number, @Body() body: OccurrenceCreateDto): Promise<OccurrenceCreatedDto> {
+
+        if (userIdToken !== body.user_id) {
+            console.log(HttpStatus.FORBIDDEN + ' - Invalid user id'); 
+            throw new HttpException('Invalid user id', HttpStatus.FORBIDDEN);
+        }
             
         try {
 
-            return await this.updateOccurrenceUseCase.execute(id, body);
+            const idNumber = parseInt(id);
+
+            if (isNaN(idNumber)) throw new Error('Invalid occurrence id');
+
+            return await this.updateOccurrenceUseCase.execute(idNumber, body);
         } catch (error) {
-            if (error.message.includes('is required') || error.message.includes('is invalid'))
+            if (error.message.includes('is required') || error.message.includes('is invalid') || error.message.includes('Invalid'))
                 throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-    
+            else if (error.message.includes('not found'))
+                throw new HttpException(error.message, HttpStatus.FORBIDDEN);
+
+            console.error(error);
             throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
