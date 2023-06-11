@@ -37,7 +37,7 @@ export class OccurrencePrismaRepository implements OccurrenceRepository {
             if (error instanceof Prisma.PrismaClientValidationError) {
                 throw new Error("Invalid data");
             }
-            
+
             throw new Error(error);
         }
     }
@@ -77,7 +77,25 @@ export class OccurrencePrismaRepository implements OccurrenceRepository {
     }
 
     async getMany(filter: Partial<OccurrenceEntity>): Promise<OccurrenceEntity[]> {
-        throw new Error("Method not implemented.");
+
+        try {
+            const occurrences = await this.prismaService.occurrence.findMany({
+                where: {
+                    contributorId: filter.contributorId as number
+                }
+            });
+
+            return occurrences.map(occurrence => new OccurrenceEntity({
+                id: occurrence.id
+                , registered_at: occurrence.registered_at
+                , local: occurrence.local
+                , occurrenceType: occurrence.type
+                , km: occurrence.km
+                , contributorId: occurrence.contributorId
+            }));
+        } catch (error) {
+            throw new Error(error);
+        }
     }
 
     async delete(id: number): Promise<void> {

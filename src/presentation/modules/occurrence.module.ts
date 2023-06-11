@@ -6,6 +6,7 @@ import { GetAllOccurrencesUseCase } from 'src/use-cases/occurrence/get-all-occur
 import { UpdateOcurrenceUseCase } from 'src/use-cases/occurrence/update-occurrence.usecase';
 import { OccurrencePrismaRepository } from 'src/data/remote/occurrence-prisma.repository';
 import { PrismaService } from 'src/infra/service/prisma.service';
+import { GetOccurrencesByUserUseCase } from 'src/use-cases/occurrence/get-occurrences-by-user.usecase';
 
 @Module({
     imports: [],
@@ -18,7 +19,8 @@ import { PrismaService } from 'src/infra/service/prisma.service';
         },
         CreateOcurrenceUseCase,
         GetAllOccurrencesUseCase,
-        UpdateOcurrenceUseCase
+        UpdateOcurrenceUseCase,
+        GetOccurrencesByUserUseCase,
     ],
 })
 export class OccurrenceModule {}

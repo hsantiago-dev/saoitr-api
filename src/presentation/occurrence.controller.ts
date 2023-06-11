@@ -4,6 +4,7 @@ import { OccurrenceCreateDto } from "src/shared/occurrence-create.dto";
 import { OccurrenceCreatedDto } from "src/shared/occurrence-created.dto";
 import { CreateOcurrenceUseCase } from "src/use-cases/occurrence/create-occurrence.usecase";
 import { GetAllOccurrencesUseCase } from "src/use-cases/occurrence/get-all-occurrences.usecase";
+import { GetOccurrencesByUserUseCase } from "src/use-cases/occurrence/get-occurrences-by-user.usecase";
 import { UpdateOcurrenceUseCase } from "src/use-cases/occurrence/update-occurrence.usecase";
 
 @Controller('/occurrences')
@@ -11,7 +12,8 @@ export class OccurrenceController {
     constructor(
         private readonly createOccurrenceUseCase: CreateOcurrenceUseCase,
         private readonly getAllOccurrencesUseCase: GetAllOccurrencesUseCase,
-        private readonly updateOccurrenceUseCase: UpdateOcurrenceUseCase
+        private readonly updateOccurrenceUseCase: UpdateOcurrenceUseCase,
+        private readonly getOccurrencesByUserUseCase: GetOccurrencesByUserUseCase
     ) {}
     
     @UseGuards(AuthGuard)
@@ -72,6 +74,24 @@ export class OccurrenceController {
             return await this.updateOccurrenceUseCase.execute(id, body);
         } catch (error) {
             if (error.message.includes('is required') || error.message.includes('is invalid'))
+                throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    
+            throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @UseGuards(AuthGuard)
+    @Get('/users/:userId')
+    async getByUserId(@Param('userId') userId: string): Promise<OccurrenceCreatedDto[]> {
+
+        try {
+            
+            const id = parseInt(userId);
+            if (isNaN(id)) throw new Error('Invalid user id');
+
+            return await this.getOccurrencesByUserUseCase.execute(id);
+        } catch (error) {
+            if (error.message.includes('Invalid'))
                 throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     
             throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
