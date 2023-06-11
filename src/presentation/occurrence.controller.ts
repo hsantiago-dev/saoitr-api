@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Post, HttpException, HttpStatus, Put, Param, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, HttpException, HttpStatus, Put, Param, UseGuards, Delete } from "@nestjs/common";
 import { AuthGuard } from "src/infra/auth/auth.guard";
 import { UserId } from "src/infra/decorators/user-id.decorator";
 import { OccurrenceCreateDto } from "src/shared/occurrence-create.dto";
 import { OccurrenceCreatedDto } from "src/shared/occurrence-created.dto";
 import { CreateOcurrenceUseCase } from "src/use-cases/occurrence/create-occurrence.usecase";
+import { DeleteOccurrenceUseCase } from "src/use-cases/occurrence/delete-occurrence.usecase";
 import { GetAllOccurrencesUseCase } from "src/use-cases/occurrence/get-all-occurrences.usecase";
 import { GetOccurrencesByUserUseCase } from "src/use-cases/occurrence/get-occurrences-by-user.usecase";
 import { UpdateOcurrenceUseCase } from "src/use-cases/occurrence/update-occurrence.usecase";
@@ -14,7 +15,8 @@ export class OccurrenceController {
         private readonly createOccurrenceUseCase: CreateOcurrenceUseCase,
         private readonly getAllOccurrencesUseCase: GetAllOccurrencesUseCase,
         private readonly updateOccurrenceUseCase: UpdateOcurrenceUseCase,
-        private readonly getOccurrencesByUserUseCase: GetOccurrencesByUserUseCase
+        private readonly getOccurrencesByUserUseCase: GetOccurrencesByUserUseCase,
+        private readonly deleteOccurrenceUseCase: DeleteOccurrenceUseCase
     ) {}
     
     @UseGuards(AuthGuard)
@@ -107,6 +109,23 @@ export class OccurrenceController {
             if (error.message.includes('Invalid'))
                 throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     
+            throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @UseGuards(AuthGuard)
+    @Delete('/:occurrenceId')
+    async delete(@Param('occurrenceId') id: string, @UserId() userIdToken: number): Promise<void> {
+
+        try {
+
+            const idNumber = parseInt(id);
+
+            if (isNaN(idNumber)) throw new Error('Invalid occurrence id');
+
+            await this.deleteOccurrenceUseCase.execute(idNumber);
+        } catch (error) {
+            console.error(error);
             throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

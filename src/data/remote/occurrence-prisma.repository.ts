@@ -133,6 +133,16 @@ export class OccurrencePrismaRepository implements OccurrenceRepository {
     }
 
     async delete(id: number): Promise<void> {
-        throw new Error("Method not implemented.");
+        
+        try {
+
+            await this.prismaService.occurrence.delete({
+                where: {
+                    id: id
+                }
+            });
+        } catch (error) {
+            throw new Error(error);
+        }
     }
 }
