@@ -58,8 +58,7 @@ export class OccurrenceController {
 
             const occurrences = await this.getAllOccurrencesUseCase.execute();
     
-            console.log('Retorno 200:');
-            console.log(occurrences);
+            console.log('Retorno 200');
     
             return occurrences;
         } catch (error) {
@@ -72,6 +71,11 @@ export class OccurrenceController {
     @Put('/:occurrenceId')
     async update(@Param('occurrenceId') id: string, @UserId() userIdToken: number, @Body() body: OccurrenceCreateDto): Promise<OccurrenceCreatedDto> {
 
+        console.log('\n\n----------------------------------------------------------');
+        console.log('Atualizar ocorrência...');
+        console.log('Recebido:');
+        console.log(body);
+
         if (userIdToken !== body.user_id) {
             console.log(HttpStatus.FORBIDDEN + ' - Invalid user id'); 
             throw new HttpException('Invalid user id', HttpStatus.FORBIDDEN);
@@ -83,12 +87,23 @@ export class OccurrenceController {
 
             if (isNaN(idNumber)) throw new Error('Invalid occurrence id');
 
-            return await this.updateOccurrenceUseCase.execute(idNumber, body);
+            const occurrence = await this.updateOccurrenceUseCase.execute(idNumber, body);
+
+            console.log('Retorno 200:');
+            console.log(occurrence);
+
+            return occurrence;
         } catch (error) {
-            if (error.message.includes('is required') || error.message.includes('is invalid') || error.message.includes('Invalid'))
+            if (error.message.includes('is required') || error.message.includes('is invalid') || error.message.includes('Invalid')) {
+
+                console.log(HttpStatus.BAD_REQUEST + ' - ' + error.message);
                 throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-            else if (error.message.includes('not found'))
+            }
+            else if (error.message.includes('not found')) {
+                
+                console.log(HttpStatus.FORBIDDEN + ' - ' + error.message);
                 throw new HttpException(error.message, HttpStatus.FORBIDDEN);
+            }
 
             console.error(error);
             throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -98,13 +113,18 @@ export class OccurrenceController {
     @UseGuards(AuthGuard)
     @Get('/users/:userId')
     async getByUserId(@Param('userId') userId: string): Promise<OccurrenceCreatedDto[]> {
+        
+        console.log('\n\n----------------------------------------------------------');
+        console.log('Todas as ocorrências do usuário ' + userId + '...');
 
         try {
             
             const id = parseInt(userId);
             if (isNaN(id)) throw new Error('Invalid user id');
 
-            return await this.getOccurrencesByUserUseCase.execute(id);
+            const occurrences = await this.getOccurrencesByUserUseCase.execute(id);
+            console.log('Retorno 200');
+            return occurrences;
         } catch (error) {
             if (error.message.includes('Invalid'))
                 throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
@@ -117,6 +137,9 @@ export class OccurrenceController {
     @Delete('/:occurrenceId')
     async delete(@Param('occurrenceId') id: string, @UserId() userIdToken: number): Promise<void> {
 
+        console.log('\n\n----------------------------------------------------------');
+        console.log('Deletar ocorrência...');
+
         try {
 
             const idNumber = parseInt(id);
@@ -124,6 +147,8 @@ export class OccurrenceController {
             if (isNaN(idNumber)) throw new Error('Invalid occurrence id');
 
             await this.deleteOccurrenceUseCase.execute(idNumber);
+
+            console.log('Retorno 200');
         } catch (error) {
             console.error(error);
             throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);

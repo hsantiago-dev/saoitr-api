@@ -101,6 +101,9 @@ export class ContributorController {
     @Delete('/:userId')
     async delete(@Param('userId') id: string, @UserId() userIdToken: number): Promise<void> {
 
+        console.log('\n\n----------------------------------------------------------');
+        console.log('Deletar usuário...');
+        
         try {
 
             const idNumber = parseInt(id);
@@ -108,10 +111,16 @@ export class ContributorController {
             if (isNaN(idNumber)) throw new Error('Invalid occurrence id');
 
             await this.deleteContributorUseCase.execute(idNumber);
-        } catch (error) {
-            if (error.message.includes('Invalid'))
-                throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
 
+            console.log('Retorno 200');
+        } catch (error) {
+            if (error.message.includes('Invalid')) {
+
+                console.log(HttpStatus.BAD_REQUEST + ' - ' + error.message);
+                throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+            }
+
+            console.log(HttpStatus.INTERNAL_SERVER_ERROR + ' - ' + error.message);
             throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
