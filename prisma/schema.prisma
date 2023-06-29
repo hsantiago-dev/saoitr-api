@@ -21,6 +21,6 @@ model Occurrence {
   local String
   type Int
   km Int
-  contributor   Contributor @relation(fields: [contributorId], references: [id])
-  contributorId Int
+  contributor   Contributor? @relation(fields: [contributorId], references: [id], onDelete: SetNull)
+  contributorId Int?
 }
